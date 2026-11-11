@@ -1,11 +1,10 @@
 import { getStatus } from 'http-response-text'
-// https://www.npmjs.com/package/mongodb
 import { MongoClient } from 'mongodb'
 
-const url = "mongodb://localhost:27017"
+const dbUrl = "mongodb://localhost:27017"
 const dbName = 'tests'
 
-const client = new MongoClient(url)
+const client = new MongoClient(dbUrl)
 
 // Languages supported by http-response-text, anything else falls back to English
 const languages = ['en', 'zh', 'ja'] as const

@@ -18,7 +18,7 @@ None, as default.
 
 ## Usage
 
-### Start with [Docker Compose](https://docs.docker.com/compose/)
+### Start up with [Docker Compose](https://docs.docker.com/compose/)
 
 ```bash
 # Initiate .env file
@@ -53,7 +53,7 @@ Pass in to link the database container with param `--link database-container-nam
 docker run -p 8081:8081 -d --restart unless-stopped --link mongo:db --name mongo-express mongo-express:latest
 ```
 
-### Run the Node.js client
+## Test Drive
 
 Requires Node.js 24 or newer; `.ts` files run natively without a build step.
 
@@ -73,6 +73,6 @@ docker exec -it mongo mongosh
 
 ## References
 
-- https://www.mongodb.com/docs/manual/tutorial/install-mongodb-community-with-docker/
 - [MongoDB on DockerHub](https://hub.docker.com/r/mongodb/mongodb-community-server)
 - [mongo-express on DockerHub](https://hub.docker.com/_/mongo-express/)
+- https://www.mongodb.com/docs/manual/tutorial/install-mongodb-community-with-docker/
