@@ -2,7 +2,7 @@
 import { MongoClient } from 'mongodb'
 
 const url = "mongodb://localhost:27017"
-const dbName = 'snippets'
+const dbName = 'tests'
 
 const client = new MongoClient(url)
 
@@ -28,7 +28,6 @@ const run = async () => {
     // Find All Documents
     const findResult = await collection.find({}).toArray();
     console.log('Found documents =>', findResult);
-
 
   } finally {
     // Ensures that the client will close when you finish/error

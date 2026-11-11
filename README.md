@@ -53,6 +53,17 @@ Pass in to link the database container with param `--link database-container-nam
 docker run -p 8081:8081 -d --restart unless-stopped --link mongo:db --name mongo-express mongo-express:latest
 ```
 
+### Run the Node.js client
+
+Requires Node.js 24 or newer; `.ts` files run natively without a build step.
+
+```bash
+# Run once
+pnpm start
+# Watch mode, restarts on file changes
+pnpm start:dev
+```
+
 ### Further operations
 
 ```bash

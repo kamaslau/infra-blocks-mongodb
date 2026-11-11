@@ -8,19 +8,21 @@
     "MongoDB",
     "Node.js"
   ],
+  "engines": {
+    "node": "^26 || >=24"
+  },
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "test": "node --test",
-    "start:dev": "cross-env nodemon"
+    "start": "node src/index.ts",
+    "start:dev": "node --watch src/index.ts",
+    "test": "node --test"
   },
   "dependencies": {
-    "mongodb": "^7.5.0"
+    "mongodb": "^7.8.0"
   },
   "devDependencies": {
     "@types/node": "^26",
-    "cross-env": "^10.1.0",
-    "nodemon": "^3.1.14",
     "typescript": "^7"
   },
   "repository": {
