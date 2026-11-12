@@ -1,24 +1,27 @@
-# trial-mongodb
+# infra-blocks-mongodb
 
+[![Blocks](https://img.shields.io/badge/infra--blocks-index-555?style=flat-square)](https://github.com/kamaslau/infra-blocks)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-![Repository size](https://img.shields.io/github/repo-size/kamaslau/trial-mongodb?color=56BEB8)
 
-A [MongoDB](https://www.mongodb.com/docs/) bootstraper, using [mongo-express](https://github.com/mongo-express/mongo-express) as dashboard UI, and [official Node.js client driver](https://www.mongodb.com/docs/drivers/node/current/quick-start/).
+A unit, not a demo: one service, one port, one documented credential, disposable with a single command.
 
-For desktop GUI, consider [MongoDB Compass](https://www.mongodb.com/products/compass).
+Typical use: document data, or a schema that is still moving and a migration per week would be wasted work.
+
+[MongoDB](https://www.mongodb.com/docs/) with the [official Node.js driver](https://www.mongodb.com/docs/drivers/node/current/quick-start/). For a desktop GUI, use [MongoDB Compass](https://www.mongodb.com/products/compass).
 
 ## Service URL
 
-- Database (MongoDB) [http://localhost:27017](http://localhost:27017)
-- Web UI (mongo-express) [http://localhost:8081](http://localhost:8081)
+- Database (MongoDB) `localhost:27017`
+
+Ports can be changed in `.env`; see Usage.
 
 ## Default user
 
-None, as default.
+None by default — the container starts without auth. That is acceptable only while the port is not reachable from outside the machine; see *Why this shape* before putting this on a host with a public interface.
 
 ## Usage
 
-### Start up with [Docker Compose](https://docs.docker.com/compose/)
+### Start with [Docker Compose](https://docs.docker.com/compose/)
 
 ```bash
 # Initiate .env file
@@ -37,42 +40,39 @@ docker compose up -d
 
 ### Start services individually
 
-Launch database first, then the UI.
-
-#### MongoDB
-
 ```bash
 docker run -p 27017:27017 -d --restart unless-stopped --name=mongo mongodb/mongodb-community-server:latest
-```
-
-#### mongo-express
-
-Pass in to link the database container with param `--link database-container-name:db` .
-
-```bash
-docker run -p 8081:8081 -d --restart unless-stopped --link mongo:db --name mongo-express mongo-express:latest
-```
-
-## Test Drive
-
-Requires Node.js 24 or newer; `.ts` files run natively without a build step.
-
-```bash
-# Run once
-pnpm start
-# Watch mode, restarts on file changes
-pnpm start:dev
 ```
 
 ### Further operations
 
 ```bash
-# Enter container and initiate shell
+# mongosh inside the container
 docker exec -it mongo mongosh
 ```
 
-## References
+## Verify
 
-- [MongoDB on DockerHub](https://hub.docker.com/r/mongodb/mongodb-community-server)
-- [mongo-express on DockerHub](https://hub.docker.com/_/mongo-express/)
-- https://www.mongodb.com/docs/manual/tutorial/install-mongodb-community-with-docker/
+```bash
+docker compose exec -T mongo mongosh --quiet --eval 'db.runCommand({ping:1})'
+```
+
+`{ ok: 1 }` means the server is answering. A driver-level check is in `src/` — `pnpm start` connects with the official Node.js driver and writes one document, which is the closer proof if the client is a Node service.
+
+## Why this shape
+
+A single node with no replica set, deliberately. The question this unit answers is "can this app talk to a document store", not "does the cluster survive a node loss"; adding a replica set triples the setup and the memory for a question nobody asked at this stage.
+
+The dashboard is the official driver rather than a bundled web UI: the thing that breaks in practice is the connection string, and a Node script that uses the same driver as the application fails in the same way the application will. `docker exec ... mongosh` covers the interactive case.
+
+No auth means no credential to document, which is also why the compose file publishes only the one port and nothing else is exposed. If the host is reachable from outside, add `--auth` and create a user before the first `up` — doing it after the fact leaves the data written while the database was open.
+
+Data is on a named volume at `/data/db`, so it survives `down` and only `down -v` removes it. That is also why the unit is safe to hand over: the disposal step is one flag, and it is written down.
+
+## Notes for deployments in China
+
+`mongodb/mongodb-community-server` is a large image and pulls slowly through a congested link; pull it before the machine moves behind a client firewall. If the app is also in this repo's `src/`, run `pnpm install` with a registry mirror configured, since the driver and its dependencies are not cached on a fresh host.
+
+---
+
+Part of [infrastructure blocks](https://github.com/kamaslau/infra-blocks) · ← back to index
