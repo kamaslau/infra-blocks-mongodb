@@ -1,9 +1,9 @@
 {
-  "name": "trial-mongodb",
+  "name": "infra-blocks-mongodb",
   "version": "0.1.0",
   "author": "Lau, Kamas <kamaslau@dingtalk.com> (https://www.kamaslau.com/)",
   "license": "MIT",
-  "description": "Trial or micro-service unit of MongoDB, with official Node.js driver.",
+  "description": "MongoDB with the official Node.js driver, for a schema that is still moving.",
   "keywords": [
     "MongoDB",
     "Node.js"
@@ -28,10 +28,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kamaslau/trial-mongodb.git"
+    "url": "git+https://github.com/kamaslau/infra-blocks-mongodb.git"
   },
   "bugs": {
-    "url": "https://github.com/kamaslau/trial-mongodb/issues"
+    "url": "https://github.com/kamaslau/infra-blocks-mongodb/issues"
   },
-  "homepage": "https://github.com/kamaslau/trial-mongodb#readme"
+  "homepage": "https://github.com/kamaslau/infra-blocks"
 }
