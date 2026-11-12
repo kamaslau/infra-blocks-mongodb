@@ -19,7 +19,7 @@
     "test": "node --test"
   },
   "dependencies": {
-    "http-response-text": "^0.10.0",
+    "http-response-text": "^0.11.0",
     "mongodb": "^7.8.0"
   },
   "devDependencies": {
