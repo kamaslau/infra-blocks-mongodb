@@ -1,19 +1,18 @@
-import { getStatus } from 'http-response-text'
+import { getStatus, listLanguages } from 'http-response-text'
 import { MongoClient, MongoServerError } from 'mongodb'
 
 const dbUrl = process.env.DB_URL ?? 'mongodb://localhost:27017'
 const dbName = process.env.DB_NAME ?? 'tests'
 
-// Languages supported by http-response-text, anything else falls back to English
-const languages = ['en', 'zh', 'ja'] as const
-type Language = (typeof languages)[number]
+// Whatever the installed version ships, anything else falls back to English
+const languages = await listLanguages()
 
-const detectLanguage = (): Language => {
+const detectLanguage = () => {
   const locale = process.env.LC_ALL || process.env.LC_MESSAGES || process.env.LANG
     || Intl.DateTimeFormat().resolvedOptions().locale
   const language = locale.split(/[-_.]/)[0].toLowerCase()
 
-  return languages.find((item) => item === language) ?? 'en'
+  return [...languages].find((item) => item === language) ?? 'en'
 }
 
 const language = detectLanguage()

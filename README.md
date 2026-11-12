@@ -82,7 +82,7 @@ A failure replaces the step's line, and the exit code says whether the run was u
 | Write or read rejected by the server | `Insert (500 Internal Server Error) …` | `1` |
 | Read comes back empty | `FindAll (404 Not Found) { count: 0 }` | `0` |
 
-The connection attempt gives up after five seconds instead of the driver's default thirty, so a wrong `DB_URL` fails while you are still watching the terminal. Nothing is cleared between runs, so `count` grows by three each time — `docker compose down -v` is what empties it. `PORT` and `DB_URL` move together: changing the published port in `.env` without changing `DB_URL` reproduces the `503` above. Message language follows `LANG` / `LC_ALL` — `en`, `zh`, `ja`, anything else falls back to English.
+The connection attempt gives up after five seconds instead of the driver's default thirty, so a wrong `DB_URL` fails while you are still watching the terminal. Nothing is cleared between runs, so `count` grows by three each time — `docker compose down -v` is what empties it. `PORT` and `DB_URL` move together: changing the published port in `.env` without changing `DB_URL` reproduces the `503` above. Message language follows `LANG` / `LC_ALL`, matched against `listLanguages()` from the installed http-response-text (`en`, `zh`, `ja`, `fr` today); anything else falls back to English.
 
 ## Why this shape
 
