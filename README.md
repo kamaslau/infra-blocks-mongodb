@@ -60,6 +60,30 @@ docker compose exec -T mongo mongosh --quiet --eval 'db.runCommand({ping:1})'
 
 `{ ok: 1 }` means the server is answering. A driver-level check is in `src/` — `pnpm start` connects with the official Node.js driver and writes one document, which is the closer proof if the client is a Node service.
 
+### What the demo reports when it fails
+
+`src/index.ts` connects, inserts three documents, reads them back, and prints one line per step, using [http-response-text](https://github.com/kamaslau/http-response-text) for the status text:
+
+```bash
+cp .env.example .env
+pnpm install
+pnpm start
+# Connect (200 OK) mongodb://localhost:27017
+# Insert (201 Created) { insertedCount: 3 }
+# FindAll (200 OK) { count: 3 }
+```
+
+A failure replaces the step's line, and the exit code says whether the run was usable:
+
+| What happened | Line in the log | Exit code |
+|---|---|---|
+| Nothing answers on `DB_URL` | `Connect (503 Service Unavailable) connect ECONNREFUSED 127.0.0.1:27017` | `1` |
+| Write refused as a duplicate key | `Insert (409 Conflict) E11000 duplicate key error …` | `1` |
+| Write or read rejected by the server | `Insert (500 Internal Server Error) …` | `1` |
+| Read comes back empty | `FindAll (404 Not Found) { count: 0 }` | `0` |
+
+The connection attempt gives up after five seconds instead of the driver's default thirty, so a wrong `DB_URL` fails while you are still watching the terminal. Nothing is cleared between runs, so `count` grows by three each time — `docker compose down -v` is what empties it. `PORT` and `DB_URL` move together: changing the published port in `.env` without changing `DB_URL` reproduces the `503` above. Message language follows `LANG` / `LC_ALL` — `en`, `zh`, `ja`, anything else falls back to English.
+
 ## Why this shape
 
 A single node with no replica set, deliberately. The question this unit answers is "can this app talk to a document store", not "does the cluster survive a node loss"; adding a replica set triples the setup and the memory for a question nobody asked at this stage.
