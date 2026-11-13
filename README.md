@@ -42,14 +42,14 @@ docker compose up -d
 ### Start services individually
 
 ```bash
-docker run -p 27017:27017 -d --restart unless-stopped --name=mongo mongodb/mongodb-community-server:latest
+docker run -p 27017:27017 -d --restart unless-stopped --name=mongodb mongodb/mongodb-community-server:latest
 ```
 
 ### Further operations
 
 ```bash
 # mongosh inside the container
-docker exec -it mongo mongosh
+docker exec -it mongodb mongosh
 ```
 
 ## Verify
