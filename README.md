@@ -100,4 +100,4 @@ Data is on a named volume at `/data/db`, so it survives `down` and only `down -v
 
 ---
 
-Part of [infrastructure blocks](https://github.com/kamaslau/infra-blocks) · ← back to index
+Part of [infrastructure blocks](https://github.com/kamaslau/infra-blocks) · ← back to index · [what I do](https://www.kamaslau.com/works?utm_source=github&utm_medium=repo-readme&utm_campaign=always-on&utm_content=unit)
