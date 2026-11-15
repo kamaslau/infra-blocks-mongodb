@@ -1,4 +1,4 @@
-import { getStatus, listLanguages } from 'http-response-text'
+import { getStatus, listLanguages, type statusCode } from 'http-response-text'
 import { MongoClient, MongoServerError } from 'mongodb'
 
 const dbUrl = process.env.DB_URL ?? 'mongodb://localhost:27017'
@@ -17,7 +17,7 @@ const detectLanguage = () => {
 
 const language = detectLanguage()
 
-const report = async (code: number, label: string, payload?: unknown) => {
+const report = async (code: statusCode, label: string, payload?: unknown) => {
   const { message } = await getStatus(code, language)
   const line = `${label} (${code} ${message})`
   const detail = payload instanceof Error ? payload.message || payload.name : payload
